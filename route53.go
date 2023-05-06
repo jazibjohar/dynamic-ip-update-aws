@@ -10,12 +10,12 @@ import (
 )
 
 type UpdateIP struct {
-	HostPublicIP string //12.12.0.12
+	HostPublicIP string // 12.12.0.12
 	RecordName   string // example.com
 	HostedZoneId string // Z3M3LMPEXAMPLE
 }
 
-func UpsertIp(updateIP UpdateIP) {
+func UpsertIp(updateIP UpdateIP) error {
 	svc := route53.New(session.New())
 	input := &route53.ChangeResourceRecordSetsInput{
 		ChangeBatch: &route53.ChangeBatch{
@@ -60,8 +60,9 @@ func UpsertIp(updateIP UpdateIP) {
 			// Message from an error.
 			fmt.Println(err.Error())
 		}
-		return
+		return err
 	}
 
 	fmt.Println(result)
+	return nil
 }
