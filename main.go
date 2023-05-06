@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"os"
 
 	externalip "github.com/glendc/go-external-ip"
 )
@@ -19,8 +19,13 @@ func main() {
 	// Get your IP,
 	// which is never <nil> when err is <nil>.
 	ip, err := consensus.ExternalIP()
-	if err == nil {
-		fmt.Println(ip.String()) // print IPv4/IPv6 in string format
+	if err != nil {
+		panic(err)
 	}
 
+	UpsertIp(UpdateIP{
+		HostPublicIP: ip.String(), // print IPv4/IPv6 in string format
+		HostedZoneId: os.Getenv("HOSTED_ZONE_ID"),
+		RecordName:   os.Getenv("DOMAIN_TO_UPDATE"),
+	})
 }
